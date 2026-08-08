@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fruit for Sale</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --deep:#0a1330;
+    --deep-2:#0f1c45;
+    --panel:#121c47;
+    --teal:#2fe0c9;
+    --gold:#ffb020;
+    --purple:#8a5cff;
+    --text:#eaf0ff;
+    --text-soft:#9fb0e0;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    min-height:100vh;
+    font-family:'Inter',system-ui,sans-serif;
+    color:var(--text);
+    background:
+      radial-gradient(circle at 15% 10%, rgba(138,92,255,0.25), transparent 45%),
+      radial-gradient(circle at 85% 15%, rgba(47,224,201,0.18), transparent 40%),
+      radial-gradient(circle at 50% 100%, rgba(255,176,32,0.10), transparent 45%),
+      linear-gradient(180deg, var(--deep) 0%, var(--deep-2) 100%);
+    display:flex;align-items:center;justify-content:center;
+    padding:28px 16px;
+  }
+
+  .wrap{width:100%;max-width:440px;}
+
+  .top-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;}
+  .brand{font-family:'Baloo 2',sans-serif;font-weight:700;font-size:15px;color:var(--text-soft);letter-spacing:0.02em;}
+  .brand span{color:var(--teal);}
+  .lock-btn{
+    background:rgba(255,255,255,0.06);
+    border:1px solid rgba(255,255,255,0.15);
+    color:var(--text-soft);
+    width:34px;height:34px;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    cursor:pointer;font-size:14px;
+  }
+  .lock-btn.unlocked{border-color:var(--gold);color:var(--gold);}
+
+  .card{
+    background:linear-gradient(160deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
+    border:1px solid rgba(138,92,255,0.35);
+    border-radius:22px;
+    padding:22px;
+    box-shadow:0 0 0 1px rgba(255,255,255,0.03), 0 30px 60px rgba(0,0,0,0.5), 0 0 70px rgba(138,92,255,0.12);
+    position:relative;
+    overflow:hidden;
+  }
+  .card::before{
+    content:"";position:absolute;inset:0;
+    background:radial-gradient(circle at 50% 0%, rgba(47,224,201,0.10), transparent 60%);
+    pointer-events:none;
+  }
+
+  .photo-frame{
+    width:100%;aspect-ratio:1/1;
+    border-radius:16px;
+    background:radial-gradient(circle at 50% 40%, rgba(255,176,32,0.18), rgba(10,19,48,0.4) 70%);
+    border:1px solid rgba(255,255,255,0.1);
+    display:flex;align-items:center;justify-content:center;
+    overflow:hidden;
+    margin-bottom:16px;
+    position:relative;
+  }
+  .photo-frame img{width:100%;height:100%;object-fit:contain;padding:14px;filter:drop-shadow(0 10px 25px rgba(255,176,32,0.35));}
+  .photo-frame .placeholder{color:var(--text-soft);font-size:13px;text-align:center;padding:20px;}
+  .sold-stamp{
+    position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) rotate(-14deg);
+    border:3px solid #ff4d5e;color:#ff4d5e;font-family:'Baloo 2',sans-serif;font-weight:800;
+    font-size:26px;letter-spacing:0.08em;padding:4px 16px;border-radius:8px;
+    background:rgba(10,19,48,0.6);
+  }
+
+  .name{
+    font-family:'Baloo 2',sans-serif;font-weight:700;font-size:26px;
+    margin:0 0 6px;line-height:1.15;
+    text-shadow:0 0 20px rgba(138,92,255,0.4);
+  }
+  .price-row{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
+  .price{
+    font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:17px;
+    background:linear-gradient(135deg, var(--gold), #ff8a3d);
+    color:#241200;padding:6px 12px;border-radius:8px;
+  }
+  .status-pill{
+    font-size:11px;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;
+    color:var(--teal);border:1px solid rgba(47,224,201,0.4);padding:4px 10px;border-radius:20px;
+  }
+  .status-pill.sold{color:#ff8a99;border-color:rgba(255,138,153,0.4);}
+
+  .desc{
+    font-size:14px;line-height:1.65;color:var(--text-soft);
+    white-space:pre-wrap;margin-bottom:18px;
+    min-height:20px;
+  }
+
+  .contact-stack{display:flex;flex-direction:column;gap:9px;}
+  .contact-btn{
+    display:flex;align-items:center;justify-content:center;gap:9px;
+    width:100%;padding:13px 16px;border-radius:12px;border:none;
+    color:#fff;font-weight:700;font-size:14.5px;font-family:'Inter',sans-serif;
+    cursor:pointer;text-decoration:none;
+    transition:transform .12s;
+  }
+  .contact-btn:hover{transform:translateY(-1px);}
+  .contact-btn svg{width:18px;height:18px;flex-shrink:0;}
+  .fb-btn{background:linear-gradient(135deg,#1877f2,#0e5fd1);box-shadow:0 10px 22px rgba(24,119,242,0.3);}
+  .fb-btn svg{fill:#fff;}
+  .tiktok-btn{background:linear-gradient(135deg,#25f4ee,#111 45%,#fe2c55);box-shadow:0 10px 22px rgba(0,0,0,0.35);}
+  .tiktok-btn svg{fill:#fff;}
+  .gmail-btn{background:linear-gradient(135deg,#ea4335,#c5221f);box-shadow:0 10px 22px rgba(234,67,53,0.3);}
+  .gmail-btn svg{fill:#fff;}
+
+  .no-contact{
+    text-align:center;font-size:12.5px;color:var(--text-soft);
+    border:1px dashed rgba(255,255,255,0.2);border-radius:12px;padding:14px;
+  }
+
+  .edit-btn{
+    width:100%;margin-top:12px;padding:12px;border-radius:12px;
+    background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.15);
+    color:var(--text);font-weight:600;font-size:13.5px;cursor:pointer;
+  }
+
+  /* overlay */
+  .overlay{
+    position:fixed;inset:0;background:rgba(4,7,20,0.78);
+    display:none;align-items:center;justify-content:center;padding:20px;z-index:50;
+  }
+  .overlay.show{display:flex;}
+  .modal{
+    background:var(--panel);border:1px solid rgba(138,92,255,0.35);
+    border-radius:18px;padding:22px;width:100%;max-width:420px;
+    max-height:88vh;overflow-y:auto;position:relative;
+    box-shadow:0 30px 60px rgba(0,0,0,0.55);
+  }
+  .modal-close{position:absolute;top:14px;right:14px;background:none;border:none;color:var(--text-soft);font-size:18px;cursor:pointer;}
+  .modal h2{font-family:'Baloo 2',sans-serif;font-size:20px;margin:0 0 14px;padding-right:24px;}
+  .section-label{font-size:12px;font-weight:700;color:var(--teal);text-transform:uppercase;letter-spacing:0.06em;margin:18px 0 8px;}
+  .field{margin-bottom:13px;}
+  .field label{display:block;font-size:11.5px;font-weight:600;text-transform:uppercase;letter-spacing:0.05em;color:var(--text-soft);margin-bottom:6px;}
+  .field input[type=text],.field input[type=password],.field input[type=url],.field input[type=email],.field textarea{
+    width:100%;padding:10px 11px;border-radius:8px;border:1px solid rgba(255,255,255,0.15);
+    background:rgba(255,255,255,0.05);color:var(--text);font-family:'Inter',sans-serif;font-size:14px;
+  }
+  .field textarea{resize:vertical;min-height:70px;}
+  .field input:focus,.field textarea:focus{outline:2px solid var(--teal);outline-offset:1px;}
+  .checkbox-row{display:flex;align-items:center;gap:8px;font-size:13.5px;margin-bottom:14px;}
+  .upload-row{display:flex;align-items:center;gap:12px;}
+  .upload-row img{width:56px;height:56px;object-fit:cover;border-radius:8px;border:1px solid rgba(255,255,255,0.15);}
+  .file-btn{font-size:12.5px;font-weight:600;padding:9px 12px;border-radius:8px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);color:var(--text);cursor:pointer;}
+  .helper{font-size:11.5px;color:var(--text-soft);margin-top:-6px;margin-bottom:12px;}
+  .error-text{font-size:12px;color:#ff8a99;margin:-6px 0 10px;min-height:16px;}
+  .modal-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px;}
+  .btn{font-family:'Inter',sans-serif;font-weight:700;font-size:13px;padding:11px 15px;border-radius:9px;border:none;cursor:pointer;}
+  .btn-primary{background:linear-gradient(135deg,var(--teal),#22bfa8);color:#03211c;}
+  .btn-ghost{background:transparent;border:1px solid rgba(255,255,255,0.2);color:var(--text);}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <div class="top-row">
+    <div class="brand">FRUIT<span>SHOP</span></div>
+    <button class="lock-btn" id="lockBtn" title="Seller access">🔒</button>
+  </div>
+
+  <div class="card">
+    <div class="photo-frame" id="photoFrame">
+      <div class="placeholder" id="photoPlaceholder">No photo yet</div>
+      <div class="sold-stamp" id="soldStamp" style="display:none;">SOLD</div>
+    </div>
+    <h1 class="name" id="fruitName">Untitled Fruit</h1>
+    <div class="price-row">
+      <span class="price" id="fruitPrice">—</span>
+      <span class="status-pill" id="statusPill">Available</span>
+    </div>
+    <div class="desc" id="fruitDesc">No details yet.</div>
+
+    <div class="contact-stack" id="contactStack">
+      <a class="contact-btn fb-btn" id="fbBtn" href="#" target="_blank" rel="noopener" style="display:none;">
+        <svg viewBox="0 0 24 24"><path d="M22 12a10 10 0 1 0-11.6 9.9v-7H7.9V12h2.5V9.8c0-2.5 1.5-3.9 3.8-3.9 1.1 0 2.2.2 2.2.2v2.4h-1.3c-1.2 0-1.6.8-1.6 1.6V12h2.8l-.4 2.9h-2.4v7A10 10 0 0 0 22 12z"/></svg>
+        Message on Facebook
+      </a>
+      <a class="contact-btn tiktok-btn" id="tiktokBtn" href="#" target="_blank" rel="noopener" style="display:none;">
+        <svg viewBox="0 0 24 24"><path d="M16.6 5.2c-.9-.8-1.5-1.9-1.6-3.2h-3.2v13.6c0 1.5-1.2 2.7-2.7 2.7s-2.7-1.2-2.7-2.7 1.2-2.7 2.7-2.7c.3 0 .5 0 .8.1V9.7c-.3 0-.5-.1-.8-.1-3.2 0-5.8 2.6-5.8 5.8s2.6 5.8 5.8 5.8 5.8-2.6 5.8-5.8V9.1c1.2.9 2.7 1.4 4.3 1.4V7.3c-.9 0-1.8-.3-2.6-.8-.1 0-.1-.1-.2-.1z"/></svg>
+        Message on TikTok
+      </a>
+      <a class="contact-btn gmail-btn" id="gmailBtn" href="#" style="display:none;">
+        <svg viewBox="0 0 24 24"><path d="M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2zm0 2-8 5-8-5h16zM4 18V7.4l8 5 8-5V18H4z"/></svg>
+        Email on Gmail
+      </a>
+      <div class="no-contact" id="noContact" style="display:none;">Seller hasn't added contact info yet.</div>
+    </div>
+
+    <button class="edit-btn" id="editBtn" style="display:none;">Edit listing</button>
+  </div>
+</div>
+
+<!-- Edit overlay -->
+<div class="overlay" id="editOverlay">
+  <div class="modal">
+    <button class="modal-close" id="editCloseBtn">✕</button>
+    <h2>Edit your fruit listing</h2>
+    <div class="field">
+      <label for="f-name">Fruit name</label>
+      <input type="text" id="f-name" maxlength="50" placeholder="e.g. Dragon Fruit (Awakened)">
+    </div>
+    <div class="field">
+      <label for="f-price">Price</label>
+      <input type="text" id="f-price" maxlength="20" placeholder="e.g. 500 Robux / 2M Beli">
+    </div>
+    <div class="field">
+      <label for="f-desc">Details</label>
+      <textarea id="f-desc" maxlength="400" placeholder="Stats, level, trade terms..."></textarea>
+    </div>
+    <div class="field">
+      <label>Photo</label>
+      <div class="upload-row">
+        <img id="f-preview" src="" style="display:none;">
+        <button type="button" class="file-btn" id="f-uploadBtn">Choose photo</button>
+        <input type="file" id="f-file" accept="image/*" style="display:none;">
+      </div>
+      <div class="helper" id="f-uploadStatus"></div>
+    </div>
+
+    <div class="section-label">Contact — fill in any you want to show</div>
+    <div class="field">
+      <label for="f-fb">Facebook profile link</label>
+      <input type="url" id="f-fb" placeholder="https://facebook.com/yourname">
+    </div>
+    <div class="field">
+      <label for="f-tiktok">TikTok username or link</label>
+      <input type="text" id="f-tiktok" placeholder="@yourname or https://tiktok.com/@yourname">
+    </div>
+    <div class="field">
+      <label for="f-gmail">Gmail address</label>
+      <input type="email" id="f-gmail" placeholder="yourname@gmail.com">
+    </div>
+
+    <div class="checkbox-row">
+      <input type="checkbox" id="f-sold">
+      <label for="f-sold">Mark as sold</label>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-primary" id="f-save">Save</button>
+      <button class="btn btn-ghost" id="f-cancel">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- PIN overlay -->
+<div class="overlay" id="pinOverlay">
+  <div class="modal" style="max-width:360px;">
+    <button class="modal-close" id="pinCloseBtn">✕</button>
+    <h2 id="pinTitle">Enter your PIN</h2>
+    <p class="helper" id="pinHelper" style="margin-top:-2px;">This just keeps random visitors from editing — not real security.</p>
+    <div class="field">
+      <label for="pin-input">PIN</label>
+      <input type="password" id="pin-input" placeholder="4+ characters">
+    </div>
+    <div class="error-text" id="pin-error"></div>
+    <div class="modal-actions">
+      <button class="btn btn-primary" id="pin-submit">Unlock</button>
+      <button class="btn btn-ghost" id="pin-cancel">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  var state = { fruit: { name:"", price:"", desc:"", photo:"", sold:false, fb:"", tiktok:"", gmail:"" }, ownerPin: "" };
+  var unlocked = false;
+  var pendingPhoto = "";
+
+  async function loadAll(){
+    try{
+      var r = await window.storage.get('fruit-listing', true);
+      state.fruit = r ? JSON.parse(r.value) : state.fruit;
+    }catch(e){}
+    try{
+      var r2 = await window.storage.get('owner-pin', true);
+      state.ownerPin = r2 ? r2.value : "";
+    }catch(e){}
+    render();
+  }
+  async function saveFruit(){
+    try{ await window.storage.set('fruit-listing', JSON.stringify(state.fruit), true); }
+    catch(e){ console.error('save failed', e); }
+  }
+  async function savePin(pin){
+    try{ await window.storage.set('owner-pin', pin, true); }
+    catch(e){ console.error('save failed', e); }
+  }
+
+  function tiktokUrl(val){
+    val = (val || "").trim();
+    if(!val) return "";
+    if(val.startsWith('http')) return val;
+    var handle = val.startsWith('@') ? val.slice(1) : val;
+    return 'https://www.tiktok.com/@' + handle;
+  }
+
+  function render(){
+    var f = state.fruit;
+    document.getElementById('fruitName').textContent = f.name || 'Untitled Fruit';
+    document.getElementById('fruitPrice').textContent = f.price || '—';
+    document.getElementById('fruitDesc').textContent = f.desc || 'No details yet.';
+
+    var pill = document.getElementById('statusPill');
+    pill.textContent = f.sold ? 'Sold' : 'Available';
+    pill.classList.toggle('sold', !!f.sold);
+    document.getElementById('soldStamp').style.display = f.sold ? 'block' : 'none';
+
+    var frame = document.getElementById('photoFrame');
+    var placeholder = document.getElementById('photoPlaceholder');
+    var existingImg = frame.querySelector('img.actual');
+    if(f.photo){
+      if(!existingImg){
+        existingImg = document.createElement('img');
+        existingImg.className = 'actual';
+        frame.insertBefore(existingImg, frame.firstChild);
+      }
+      existingImg.src = f.photo;
+      placeholder.style.display = 'none';
+    } else {
+      if(existingImg) existingImg.remove();
+      placeholder.style.display = 'block';
+    }
+
+    var fbBtn = document.getElementById('fbBtn');
+    var tiktokBtn = document.getElementById('tiktokBtn');
+    var gmailBtn = document.getElementById('gmailBtn');
+    var noContact = document.getElementById('noContact');
+
+    var anyContact = false;
+    if(f.fb){ fbBtn.href = f.fb; fbBtn.style.display = 'flex'; anyContact = true; } else { fbBtn.style.display = 'none'; }
+    if(f.tiktok){ tiktokBtn.href = tiktokUrl(f.tiktok); tiktokBtn.style.display = 'flex'; anyContact = true; } else { tiktokBtn.style.display = 'none'; }
+    if(f.gmail){
+      var subject = encodeURIComponent('Interested in: ' + (f.name || 'your fruit'));
+      var body = encodeURIComponent('Hi, I\'m interested in "' + (f.name || 'this fruit') + '" (' + (f.price || '') + '). Is it still available?');
+      gmailBtn.href = 'mailto:' + f.gmail + '?subject=' + subject + '&body=' + body;
+      gmailBtn.style.display = 'flex';
+      anyContact = true;
+    } else { gmailBtn.style.display = 'none'; }
+    noContact.style.display = anyContact ? 'none' : 'block';
+
+    document.getElementById('editBtn').style.display = unlocked ? 'block' : 'none';
+  }
+
+  function setUnlockedUI(){
+    document.getElementById('lockBtn').textContent = unlocked ? '🔓' : '🔒';
+    document.getElementById('lockBtn').classList.toggle('unlocked', unlocked);
+    document.getElementById('editBtn').style.display = unlocked ? 'block' : 'none';
+  }
+
+  // ---------- Edit modal ----------
+  var editOverlay = document.getElementById('editOverlay');
+  function openEdit(){
+    if(!unlocked) return;
+    var f = state.fruit;
+    document.getElementById('f-name').value = f.name || '';
+    document.getElementById('f-price').value = f.price || '';
+    document.getElementById('f-desc').value = f.desc || '';
+    document.getElementById('f-fb').value = f.fb || '';
+    document.getElementById('f-tiktok').value = f.tiktok || '';
+    document.getElementById('f-gmail').value = f.gmail || '';
+    document.getElementById('f-sold').checked = !!f.sold;
+    pendingPhoto = f.photo || '';
+    var preview = document.getElementById('f-preview');
+    if(pendingPhoto){ preview.src = pendingPhoto; preview.style.display = 'block'; }
+    else { preview.style.display = 'none'; }
+    document.getElementById('f-uploadStatus').textContent = '';
+    editOverlay.classList.add('show');
+  }
+  function closeEdit(){ editOverlay.classList.remove('show'); }
+
+  document.getElementById('editBtn').addEventListener('click', openEdit);
+  document.getElementById('editCloseBtn').addEventListener('click', closeEdit);
+  document.getElementById('f-cancel').addEventListener('click', closeEdit);
+  editOverlay.addEventListener('click', function(e){ if(e.target === editOverlay) closeEdit(); });
+
+  document.getElementById('f-uploadBtn').addEventListener('click', function(){
+    document.getElementById('f-file').click();
+  });
+  document.getElementById('f-file').addEventListener('change', function(){
+    var file = this.files[0];
+    if(!file) return;
+    var statusEl = document.getElementById('f-uploadStatus');
+    statusEl.textContent = 'Processing photo...';
+    var reader = new FileReader();
+    reader.onload = function(e){
+      var img = new Image();
+      img.onload = function(){
+        var maxW = 700;
+        var scale = Math.min(1, maxW / img.width);
+        var canvas = document.createElement('canvas');
+        canvas.width = img.width * scale;
+        canvas.height = img.height * scale;
+        var ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        pendingPhoto = canvas.toDataURL('image/png');
+        var preview = document.getElementById('f-preview');
+        preview.src = pendingPhoto;
+        preview.style.display = 'block';
+        statusEl.textContent = 'Photo ready.';
+      };
+      img.onerror = function(){ statusEl.textContent = 'Could not read that image.'; };
+      img.src = e.target.result;
+    };
+    reader.onerror = function(){ statusEl.textContent = 'Could not read that file.'; };
+    reader.readAsDataURL(file);
+  });
+
+  document.getElementById('f-save').addEventListener('click', async function(){
+    if(!unlocked) return;
+    state.fruit = {
+      name: document.getElementById('f-name').value.trim(),
+      price: document.getElementById('f-price').value.trim(),
+      desc: document.getElementById('f-desc').value.trim(),
+      photo: pendingPhoto,
+      fb: document.getElementById('f-fb').value.trim(),
+      tiktok: document.getElementById('f-tiktok').value.trim(),
+      gmail: document.getElementById('f-gmail').value.trim(),
+      sold: document.getElementById('f-sold').checked
+    };
+    await saveFruit();
+    render();
+    closeEdit();
+  });
+
+  // ---------- PIN / lock ----------
+  var pinOverlay = document.getElementById('pinOverlay');
+  var pinInput = document.getElementById('pin-input');
+  var pinError = document.getElementById('pin-error');
+  var pinTitle = document.getElementById('pinTitle');
+  var pinHelper = document.getElementById('pinHelper');
+
+  function openPin(){
+    pinInput.value = '';
+    pinError.textContent = '';
+    if(state.ownerPin){
+      pinTitle.textContent = 'Enter your PIN';
+      pinHelper.textContent = "This just keeps random visitors from editing — not real security.";
+    } else {
+      pinTitle.textContent = 'Create a seller PIN';
+      pinHelper.textContent = "Set a PIN now — enter it each time you want to edit this listing.";
+    }
+    pinOverlay.classList.add('show');
+    setTimeout(function(){ pinInput.focus(); }, 50);
+  }
+  function closePin(){ pinOverlay.classList.remove('show'); }
+
+  document.getElementById('lockBtn').addEventListener('click', function(){
+    if(unlocked){ unlocked = false; setUnlockedUI(); return; }
+    openPin();
+  });
+  document.getElementById('pinCloseBtn').addEventListener('click', closePin);
+  document.getElementById('pin-cancel').addEventListener('click', closePin);
+  pinOverlay.addEventListener('click', function(e){ if(e.target === pinOverlay) closePin(); });
+
+  document.getElementById('pin-submit').addEventListener('click', async function(){
+    var entered = pinInput.value.trim();
+    if(!entered){ pinError.textContent = 'Enter a PIN.'; return; }
+    if(!state.ownerPin){
+      if(entered.length < 4){ pinError.textContent = 'Use at least 4 characters.'; return; }
+      state.ownerPin = entered;
+      await savePin(entered);
+      unlocked = true; setUnlockedUI(); closePin();
+    } else if(entered === state.ownerPin){
+      unlocked = true; setUnlockedUI(); closePin();
+    } else {
+      pinError.textContent = 'Wrong PIN.';
+    }
+  });
+  pinInput.addEventListener('keydown', function(e){ if(e.key === 'Enter') document.getElementById('pin-submit').click(); });
+
+  loadAll();
+})();
+</script>
+</body>
+</html>
