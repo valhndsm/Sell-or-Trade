@@ -3,13 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Fruit for Sale</title>
+<title>Fruit Shop</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@600&display=swap" rel="stylesheet">
 <style>
   :root{
     --deep:#0a1330;
     --deep-2:#0f1c45;
+    --panel:#121c47;
     --teal:#2fe0c9;
     --gold:#ffb020;
     --purple:#8a5cff;
@@ -23,162 +24,142 @@
     font-family:'Inter',system-ui,sans-serif;
     color:var(--text);
     background:
-      radial-gradient(circle at 15% 10%, rgba(138,92,255,0.25), transparent 45%),
-      radial-gradient(circle at 85% 15%, rgba(47,224,201,0.18), transparent 40%),
+      radial-gradient(circle at 15% 10%, rgba(138,92,255,0.22), transparent 45%),
+      radial-gradient(circle at 85% 15%, rgba(47,224,201,0.16), transparent 40%),
       radial-gradient(circle at 50% 100%, rgba(255,176,32,0.10), transparent 45%),
       linear-gradient(180deg, var(--deep) 0%, var(--deep-2) 100%);
-    display:flex;align-items:center;justify-content:center;
-    padding:28px 16px;
+    padding:32px 18px 60px;
   }
+  .wrap{max-width:960px;margin:0 auto;}
 
-  .wrap{width:100%;max-width:440px;}
-
-  .top-row{display:flex;justify-content:center;align-items:center;margin-bottom:14px;}
-  .brand{font-family:'Baloo 2',sans-serif;font-weight:700;font-size:15px;color:var(--text-soft);letter-spacing:0.02em;}
+  header{text-align:center;margin-bottom:32px;}
+  .brand{font-family:'Baloo 2',sans-serif;font-weight:800;font-size:32px;letter-spacing:-0.01em;}
   .brand span{color:var(--teal);}
+  .tagline{color:var(--text-soft);font-size:13.5px;margin-top:6px;}
+
+  .grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill, minmax(210px,1fr));
+    gap:20px;
+  }
+  .empty{
+    text-align:center;color:var(--text-soft);font-family:'Baloo 2',sans-serif;
+    font-size:18px;padding:60px 20px;
+  }
 
   .card{
     background:linear-gradient(160deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
-    border:1px solid rgba(138,92,255,0.35);
-    border-radius:22px;
-    padding:22px;
-    box-shadow:0 0 0 1px rgba(255,255,255,0.03), 0 30px 60px rgba(0,0,0,0.5), 0 0 70px rgba(138,92,255,0.12);
+    border:1px solid rgba(138,92,255,0.3);
+    border-radius:18px;
+    padding:14px;
+    cursor:pointer;
+    box-shadow:0 14px 28px rgba(0,0,0,0.4);
+    transition:transform .15s;
     position:relative;
-    overflow:hidden;
   }
-  .card::before{
-    content:"";position:absolute;inset:0;
-    background:radial-gradient(circle at 50% 0%, rgba(47,224,201,0.10), transparent 60%);
-    pointer-events:none;
-  }
-
-  .photo-frame{
-    width:100%;aspect-ratio:1/1;
-    border-radius:16px;
-    background:radial-gradient(circle at 50% 40%, rgba(255,176,32,0.18), rgba(10,19,48,0.4) 70%);
+  .card:hover{transform:translateY(-4px);}
+  .card .thumb-frame{
+    width:100%;aspect-ratio:1/1;border-radius:12px;overflow:hidden;
+    background:radial-gradient(circle at 50% 40%, rgba(255,176,32,0.16), rgba(10,19,48,0.4) 70%);
     border:1px solid rgba(255,255,255,0.1);
-    display:flex;align-items:center;justify-content:center;
-    overflow:hidden;
-    margin-bottom:16px;
-    position:relative;
+    margin-bottom:10px;position:relative;
   }
-  .photo-frame img{width:100%;height:100%;object-fit:contain;padding:14px;filter:drop-shadow(0 10px 25px rgba(255,176,32,0.35));}
-  .sold-stamp{
+  .card .thumb-frame img{width:100%;height:100%;object-fit:contain;padding:10px;}
+  .card h3{font-family:'Baloo 2',sans-serif;font-size:15.5px;margin:0 0 6px;line-height:1.2;}
+  .card-row{display:flex;align-items:center;justify-content:space-between;gap:6px;flex-wrap:wrap;}
+  .price-chip{
+    font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:12.5px;
+    background:linear-gradient(135deg, var(--gold), #ff8a3d);color:#241200;
+    padding:3px 8px;border-radius:7px;
+  }
+  .stock-chip{font-size:10.5px;color:var(--text-soft);}
+  .sold-stamp-sm{
     position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) rotate(-14deg);
-    border:3px solid #ff4d5e;color:#ff4d5e;font-family:'Baloo 2',sans-serif;font-weight:800;
-    font-size:26px;letter-spacing:0.08em;padding:4px 16px;border-radius:8px;
+    border:2px solid #ff4d5e;color:#ff4d5e;font-family:'Baloo 2',sans-serif;font-weight:800;
+    font-size:15px;letter-spacing:0.06em;padding:2px 10px;border-radius:6px;
     background:rgba(10,19,48,0.6);
   }
 
-  .name{
-    font-family:'Baloo 2',sans-serif;font-weight:700;font-size:26px;
-    margin:0 0 6px;line-height:1.15;
-    text-shadow:0 0 20px rgba(138,92,255,0.4);
+  .overlay{
+    position:fixed;inset:0;background:rgba(4,7,20,0.8);
+    display:none;align-items:center;justify-content:center;padding:20px;z-index:50;
   }
-  .price-row{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
+  .overlay.show{display:flex;}
+  .modal{
+    background:var(--panel);border:1px solid rgba(138,92,255,0.35);
+    border-radius:18px;padding:22px;width:100%;max-width:420px;
+    max-height:88vh;overflow-y:auto;position:relative;
+    box-shadow:0 30px 60px rgba(0,0,0,0.55);
+  }
+  .modal-close{position:absolute;top:14px;right:14px;background:none;border:none;color:var(--text-soft);font-size:18px;cursor:pointer;}
+  .modal .photo-frame{
+    width:100%;aspect-ratio:1/1;border-radius:14px;overflow:hidden;margin-bottom:14px;
+    background:radial-gradient(circle at 50% 40%, rgba(255,176,32,0.18), rgba(10,19,48,0.4) 70%);
+    border:1px solid rgba(255,255,255,0.1);position:relative;
+  }
+  .modal .photo-frame img{width:100%;height:100%;object-fit:contain;padding:14px;}
+  .modal h2{font-family:'Baloo 2',sans-serif;font-size:22px;margin:0 0 8px;padding-right:24px;}
+  .price-row{display:flex;gap:8px;align-items:center;margin-bottom:12px;flex-wrap:wrap;}
   .price{
-    font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:17px;
-    background:linear-gradient(135deg, var(--gold), #ff8a3d);
-    color:#241200;padding:6px 12px;border-radius:8px;
+    font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:16px;
+    background:linear-gradient(135deg, var(--gold), #ff8a3d);color:#241200;padding:6px 12px;border-radius:8px;
   }
-  .status-pill{
-    font-size:11px;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;
-    color:var(--teal);border:1px solid rgba(47,224,201,0.4);padding:4px 10px;border-radius:20px;
-  }
+  .status-pill{font-size:11px;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;color:var(--teal);border:1px solid rgba(47,224,201,0.4);padding:4px 10px;border-radius:20px;}
   .status-pill.sold{color:#ff8a99;border-color:rgba(255,138,153,0.4);}
-  .stock-pill{
-    font-family:'IBM Plex Mono',monospace;
-    font-size:11px;font-weight:600;letter-spacing:0.03em;
-    color:var(--gold);border:1px solid rgba(255,176,32,0.4);padding:4px 10px;border-radius:20px;
-  }
-
-  .desc{
-    font-size:14px;line-height:1.65;color:var(--text-soft);
-    white-space:pre-wrap;margin-bottom:18px;
-  }
+  .stock-pill{font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;color:var(--gold);border:1px solid rgba(255,176,32,0.4);padding:4px 10px;border-radius:20px;}
+  .desc{font-size:14px;line-height:1.6;color:var(--text-soft);white-space:pre-wrap;margin-bottom:18px;}
 
   .contact-stack{display:flex;flex-direction:column;gap:9px;}
   .contact-btn{
-    display:flex;align-items:center;justify-content:center;gap:9px;
-    width:100%;padding:13px 16px;border-radius:12px;border:none;
-    color:#fff;font-weight:700;font-size:14.5px;font-family:'Inter',sans-serif;
-    cursor:pointer;text-decoration:none;
-    transition:transform .12s;
+    display:flex;align-items:center;justify-content:center;gap:9px;width:100%;padding:12px 16px;border-radius:12px;border:none;
+    color:#fff;font-weight:700;font-size:14px;font-family:'Inter',sans-serif;cursor:pointer;text-decoration:none;transition:transform .12s;
   }
   .contact-btn:hover{transform:translateY(-1px);}
-  .contact-btn svg{width:18px;height:18px;flex-shrink:0;}
-  .fb-btn{background:linear-gradient(135deg,#1877f2,#0e5fd1);box-shadow:0 10px 22px rgba(24,119,242,0.3);}
+  .contact-btn svg{width:17px;height:17px;flex-shrink:0;}
+  .fb-btn{background:linear-gradient(135deg,#1877f2,#0e5fd1);}
   .fb-btn svg{fill:#fff;}
-  .tiktok-btn{background:linear-gradient(135deg,#25f4ee,#111 45%,#fe2c55);box-shadow:0 10px 22px rgba(0,0,0,0.35);}
+  .tiktok-btn{background:linear-gradient(135deg,#25f4ee,#111 45%,#fe2c55);}
   .tiktok-btn svg{fill:#fff;}
-  .gmail-btn{background:linear-gradient(135deg,#ea4335,#c5221f);box-shadow:0 10px 22px rgba(234,67,53,0.3);}
+  .gmail-btn{background:linear-gradient(135deg,#ea4335,#c5221f);}
   .gmail-btn svg{fill:#fff;}
-
-  .no-contact{
-    text-align:center;font-size:12.5px;color:var(--text-soft);
-    border:1px dashed rgba(255,255,255,0.2);border-radius:12px;padding:14px;
-  }
+  .no-contact{text-align:center;font-size:12px;color:var(--text-soft);border:1px dashed rgba(255,255,255,0.2);border-radius:12px;padding:12px;}
 </style>
 </head>
 <body>
 
 <div class="wrap">
-  <div class="top-row">
+  <header>
     <div class="brand">FRUIT<span>SHOP</span></div>
-  </div>
+    <div class="tagline">All fruits currently for sale</div>
+  </header>
 
-  <div class="card">
-    <div class="photo-frame" id="photoFrame">
-      <div class="sold-stamp" id="soldStamp" style="display:none;">SOLD</div>
-    </div>
-    <h1 class="name" id="fruitName"></h1>
-    <div class="price-row">
-      <span class="price" id="fruitPrice"></span>
-      <span class="status-pill" id="statusPill"></span>
-      <span class="stock-pill" id="stockPill" style="display:none;"></span>
-    </div>
-    <div class="desc" id="fruitDesc"></div>
+  <div class="grid" id="grid"></div>
+</div>
 
-    <div class="contact-stack" id="contactStack">
-      <a class="contact-btn fb-btn" id="fbBtn" href="#" target="_blank" rel="noopener" style="display:none;">
-        <svg viewBox="0 0 24 24"><path d="M22 12a10 10 0 1 0-11.6 9.9v-7H7.9V12h2.5V9.8c0-2.5 1.5-3.9 3.8-3.9 1.1 0 2.2.2 2.2.2v2.4h-1.3c-1.2 0-1.6.8-1.6 1.6V12h2.8l-.4 2.9h-2.4v7A10 10 0 0 0 22 12z"/></svg>
-        Message on Facebook
-      </a>
-      <a class="contact-btn tiktok-btn" id="tiktokBtn" href="#" target="_blank" rel="noopener" style="display:none;">
-        <svg viewBox="0 0 24 24"><path d="M16.6 5.2c-.9-.8-1.5-1.9-1.6-3.2h-3.2v13.6c0 1.5-1.2 2.7-2.7 2.7s-2.7-1.2-2.7-2.7 1.2-2.7 2.7-2.7c.3 0 .5 0 .8.1V9.7c-.3 0-.5-.1-.8-.1-3.2 0-5.8 2.6-5.8 5.8s2.6 5.8 5.8 5.8 5.8-2.6 5.8-5.8V9.1c1.2.9 2.7 1.4 4.3 1.4V7.3c-.9 0-1.8-.3-2.6-.8-.1 0-.1-.1-.2-.1z"/></svg>
-        Message on TikTok
-      </a>
-      <a class="contact-btn gmail-btn" id="gmailBtn" href="#" style="display:none;">
-        <svg viewBox="0 0 24 24"><path d="M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2zm0 2-8 5-8-5h16zM4 18V7.4l8 5 8-5V18H4z"/></svg>
-        Email on Gmail
-      </a>
-      <div class="no-contact" id="noContact" style="display:none;">Seller hasn't added contact info yet.</div>
-    </div>
-  </div>
+<div class="overlay" id="detailOverlay">
+  <div class="modal" id="detailModal"></div>
 </div>
 
 <script>
 /* ============================================================
-   EDIT YOUR LISTING HERE, then save the file and push to GitHub.
-   That's the only step needed — no PIN, no login.
+   ADD / EDIT LISTINGS HERE, then save the file and push to GitHub.
+   Copy the {...} block below to add another fruit — no limit.
+   Leave fb / tiktok / gmail as "" to hide that contact button.
    ============================================================ */
-var FRUIT_LISTING = {
-  name:  "Sample Fruit — edit me!",
-  price: "e.g. 500 Robux",
-  stock: 1,                           // how many you have available
-  desc:  "Replace this text with your fruit's real stats, level, and trade terms.",
-
-  // Paste a direct image URL here (e.g. an Imgur link), or leave the
-  // DEFAULT_PHOTO placeholder below untouched to keep the default art.
-  photo: "",
-
-  sold: false,
-
-  // Leave any of these blank ("") to hide that button.
-  fb:     "",                         // e.g. "https://facebook.com/yourname"
-  tiktok: "",                         // e.g. "@yourname" or full link
-  gmail:  ""                          // e.g. "yourname@gmail.com"
-};
+var FRUIT_LISTINGS = [
+  {
+    name:  "Sample Fruit — edit me!",
+    price: "e.g. 500 Robux",
+    stock: 1,
+    desc:  "Replace this text with your fruit's real stats, level, and trade terms.",
+    photo: "",              // paste a direct image URL here, or leave blank for default art
+    sold:  false,
+    fb:     "",              // e.g. "https://facebook.com/yourname"
+    tiktok: "",              // e.g. "@yourname" or full link
+    gmail:  ""               // e.g. "yourname@gmail.com"
+  }
+  // , { name: "Another Fruit", price: "300 Robux", stock: 2, desc: "...", photo: "", sold: false, fb:"", tiktok:"", gmail:"" }
+];
 /* ============================================================ */
 
 (function(){
@@ -199,6 +180,11 @@ var FRUIT_LISTING = {
     '</g></svg>'
   );
 
+  function escapeHtml(str){
+    return (str||"").replace(/[&<>"']/g, function(c){
+      return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+    });
+  }
   function tiktokUrl(val){
     val = (val || "").trim();
     if(!val) return "";
@@ -206,54 +192,82 @@ var FRUIT_LISTING = {
     var handle = val.charAt(0) === '@' ? val.slice(1) : val;
     return 'https://www.tiktok.com/@' + handle;
   }
-
-  function render(){
-    var f = FRUIT_LISTING;
-    document.getElementById('fruitName').textContent = f.name || 'Untitled Fruit';
-    document.getElementById('fruitPrice').textContent = f.price || '—';
-    document.getElementById('fruitDesc').textContent = f.desc || 'No details yet.';
-
+  function isSoldOut(f){
     var stockNum = (typeof f.stock === 'number') ? f.stock : parseInt(f.stock, 10);
-    var isOutOfStock = !isNaN(stockNum) && stockNum <= 0;
-    var isSold = !!f.sold || isOutOfStock;
+    return !!f.sold || (!isNaN(stockNum) && stockNum <= 0);
+  }
 
-    var pill = document.getElementById('statusPill');
-    pill.textContent = isSold ? 'Sold' : 'Available';
-    pill.classList.toggle('sold', isSold);
-    document.getElementById('soldStamp').style.display = isSold ? 'block' : 'none';
+  var grid = document.getElementById('grid');
 
-    var stockPill = document.getElementById('stockPill');
-    if(!isNaN(stockNum)){
-      stockPill.textContent = isSold ? 'Stock: 0' : ('Stock: ' + stockNum + 'x');
-      stockPill.style.display = 'inline-block';
-    } else {
-      stockPill.style.display = 'none';
+  function renderGrid(){
+    grid.innerHTML = '';
+    if(!FRUIT_LISTINGS.length){
+      grid.innerHTML = '<div class="empty">No fruits listed yet.</div>';
+      return;
     }
+    FRUIT_LISTINGS.forEach(function(f, idx){
+      var sold = isSoldOut(f);
+      var card = document.createElement('div');
+      card.className = 'card';
+      card.innerHTML =
+        '<div class="thumb-frame"><img src="'+(f.photo || DEFAULT_PHOTO)+'" alt="">' +
+        (sold ? '<div class="sold-stamp-sm">SOLD</div>' : '') + '</div>' +
+        '<h3>'+escapeHtml(f.name||'Untitled Fruit')+'</h3>' +
+        '<div class="card-row"><span class="price-chip">'+escapeHtml(f.price||'—')+'</span>' +
+        (!sold && f.stock !== undefined && f.stock !== "" ? '<span class="stock-chip">'+escapeHtml(String(f.stock))+'x left</span>' : '') +
+        '</div>';
+      card.addEventListener('click', function(){ openDetail(idx); });
+      grid.appendChild(card);
+    });
+  }
 
-    var frame = document.getElementById('photoFrame');
-    var img = document.createElement('img');
-    img.src = f.photo ? f.photo : DEFAULT_PHOTO;
-    frame.insertBefore(img, frame.firstChild);
+  var detailOverlay = document.getElementById('detailOverlay');
+  var detailModal = document.getElementById('detailModal');
 
-    var fbBtn = document.getElementById('fbBtn');
-    var tiktokBtn = document.getElementById('tiktokBtn');
-    var gmailBtn = document.getElementById('gmailBtn');
-    var noContact = document.getElementById('noContact');
+  function openDetail(idx){
+    var f = FRUIT_LISTINGS[idx];
+    if(!f) return;
+    var sold = isSoldOut(f);
+    var stockNum = (typeof f.stock === 'number') ? f.stock : parseInt(f.stock, 10);
 
-    var anyContact = false;
-    if(f.fb){ fbBtn.href = f.fb; fbBtn.style.display = 'flex'; anyContact = true; }
-    if(f.tiktok){ tiktokBtn.href = tiktokUrl(f.tiktok); tiktokBtn.style.display = 'flex'; anyContact = true; }
+    var contactHtml = '';
+    var any = false;
+    if(f.fb){
+      contactHtml += '<a class="contact-btn fb-btn" href="'+f.fb+'" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M22 12a10 10 0 1 0-11.6 9.9v-7H7.9V12h2.5V9.8c0-2.5 1.5-3.9 3.8-3.9 1.1 0 2.2.2 2.2.2v2.4h-1.3c-1.2 0-1.6.8-1.6 1.6V12h2.8l-.4 2.9h-2.4v7A10 10 0 0 0 22 12z"/></svg>Message on Facebook</a>';
+      any = true;
+    }
+    if(f.tiktok){
+      contactHtml += '<a class="contact-btn tiktok-btn" href="'+tiktokUrl(f.tiktok)+'" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M16.6 5.2c-.9-.8-1.5-1.9-1.6-3.2h-3.2v13.6c0 1.5-1.2 2.7-2.7 2.7s-2.7-1.2-2.7-2.7 1.2-2.7 2.7-2.7c.3 0 .5 0 .8.1V9.7c-.3 0-.5-.1-.8-.1-3.2 0-5.8 2.6-5.8 5.8s2.6 5.8 5.8 5.8 5.8-2.6 5.8-5.8V9.1c1.2.9 2.7 1.4 4.3 1.4V7.3c-.9 0-1.8-.3-2.6-.8-.1 0-.1-.1-.2-.1z"/></svg>Message on TikTok</a>';
+      any = true;
+    }
     if(f.gmail){
       var subject = encodeURIComponent('Interested in: ' + (f.name || 'your fruit'));
       var body = encodeURIComponent('Hi, I\'m interested in "' + (f.name || 'this fruit') + '" (' + (f.price || '') + '). Is it still available?');
-      gmailBtn.href = 'mailto:' + f.gmail + '?subject=' + subject + '&body=' + body;
-      gmailBtn.style.display = 'flex';
-      anyContact = true;
+      contactHtml += '<a class="contact-btn gmail-btn" href="mailto:'+f.gmail+'?subject='+subject+'&body='+body+'"><svg viewBox="0 0 24 24"><path d="M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2zm0 2-8 5-8-5h16zM4 18V7.4l8 5 8-5V18H4z"/></svg>Email on Gmail</a>';
+      any = true;
     }
-    noContact.style.display = anyContact ? 'none' : 'block';
-  }
+    if(!any) contactHtml = '<div class="no-contact">Seller hasn\'t added contact info yet.</div>';
 
-  render();
+    detailModal.innerHTML =
+      '<button class="modal-close" id="detailCloseBtn">✕</button>' +
+      '<div class="photo-frame"><img src="'+(f.photo || DEFAULT_PHOTO)+'" alt="">' +
+      (sold ? '<div class="sold-stamp-sm" style="font-size:20px;">SOLD</div>' : '') + '</div>' +
+      '<h2>'+escapeHtml(f.name||'Untitled Fruit')+'</h2>' +
+      '<div class="price-row">' +
+        '<span class="price">'+escapeHtml(f.price||'—')+'</span>' +
+        '<span class="status-pill'+(sold?' sold':'')+'">'+(sold?'Sold':'Available')+'</span>' +
+        (!isNaN(stockNum) ? '<span class="stock-pill">Stock: '+(sold?0:stockNum)+'x</span>' : '') +
+      '</div>' +
+      '<div class="desc">'+escapeHtml(f.desc||'No details yet.')+'</div>' +
+      '<div class="contact-stack">'+contactHtml+'</div>';
+
+    detailOverlay.classList.add('show');
+    document.getElementById('detailCloseBtn').addEventListener('click', closeDetail);
+  }
+  function closeDetail(){ detailOverlay.classList.remove('show'); }
+  detailOverlay.addEventListener('click', function(e){ if(e.target === detailOverlay) closeDetail(); });
+
+  renderGrid();
 })();
 </script>
 </body>
