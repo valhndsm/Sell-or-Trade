@@ -262,7 +262,7 @@ var FRUIT_LISTINGS = [
     detailModal.innerHTML =
       '<button class="modal-close" id="detailCloseBtn">✕</button>' +
       '<div class="photo-frame"><img src="'+(f.photo || DEFAULT_PHOTO)+'" alt="">' +
-      (sold ? '<div class="sold-stamp-sm" style="font-size:20px;">OUT OF STOCK</div>' : '') + '</div>' +
+      (sold ? '<div class="sold-stamp-sm" style="font-size:15px;">OUT OF STOCK</div>' : '') + '</div>' +
       '<h2>'+escapeHtml(f.name||'Untitled Fruit')+'</h2>' +
       '<div class="price-row">' +
         '<span class="price">'+escapeHtml(f.price||'—')+'</span>' +
