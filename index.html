@@ -475,7 +475,7 @@ var FRUIT_LISTINGS = [
       '<h2>'+escapeHtml(f.name||'Untitled Fruit')+'</h2>' +
       '<div class="price-row">' +
         '<span class="price">'+escapeHtml(f.price||'—')+'</span>' +
-        '<span class="status-pill'+(sold?' sold':'')+'">'+(sold?'Sold':'Available')+'</span>' +
+        '<span class="status-pill'+(sold?' sold':'')+'">'+(sold?'Out of stock':'Available')+'</span>' +
         (!isNaN(stockNum) ? '<span class="stock-pill">Stock: '+(sold?0:stockNum)+'x</span>' : '') +
       '</div>' +
       '<div class="desc">'+escapeHtml(f.desc||'No details yet.')+'</div>' +
