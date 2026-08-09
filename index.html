@@ -32,10 +32,29 @@
   }
   .wrap{max-width:960px;margin:0 auto;}
 
-  header{text-align:center;margin-bottom:32px;}
+  header{text-align:center;margin-bottom:24px;}
   .brand{font-family:'Baloo 2',sans-serif;font-weight:800;font-size:32px;letter-spacing:-0.01em;}
   .brand span{color:var(--teal);}
   .tagline{color:var(--text-soft);font-size:13.5px;margin-top:6px;}
+
+  .search-row{
+    max-width:420px;margin:22px auto 30px;position:relative;
+  }
+  .search-row svg{
+    position:absolute;left:14px;top:50%;transform:translateY(-50%);
+    width:16px;height:16px;fill:var(--text-soft);pointer-events:none;
+  }
+  .search-row input{
+    width:100%;padding:12px 14px 12px 40px;border-radius:12px;
+    border:1px solid rgba(138,92,255,0.35);
+    background:rgba(255,255,255,0.05);color:var(--text);
+    font-family:'Inter',sans-serif;font-size:14px;
+  }
+  .search-row input::placeholder{color:var(--text-soft);}
+  .search-row input:focus{outline:2px solid var(--teal);outline-offset:1px;}
+  .search-count{
+    text-align:center;color:var(--text-soft);font-size:12px;margin:-22px 0 22px;
+  }
 
   .grid{
     display:grid;
@@ -133,6 +152,12 @@
     <div class="tagline">All fruits currently for sale</div>
   </header>
 
+  <div class="search-row">
+    <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27a6.5 6.5 0 1 0-.7.7l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0A4.5 4.5 0 1 1 14 9.5 4.5 4.5 0 0 1 9.5 14z"/></svg>
+    <input type="text" id="searchInput" placeholder="Search fruits by name...">
+  </div>
+  <div class="search-count" id="searchCount"></div>
+
   <div class="grid" id="grid"></div>
 </div>
 
@@ -152,167 +177,166 @@ var FRUIT_LISTINGS = [
     price: "₱110",
     stock: 1,
     desc:  "",
-    photo: "Kitsune_Fruit.png",              // paste a direct image URL here, or leave blank for default art
+    photo: "Kitsune_Fruit.png",
     sold:  false,
-    fb:     "https://www.facebook.com/people/Val-Medalla/61575121860127/",              // e.g. "https://facebook.com/yourname"
-    tiktok: "",              // e.g. "@yourname" or full link
-    gmail:  ""               // e.g. "yourname@gmail.com"
+    fb:     "https://www.facebook.com/people/Val-Medalla/61575121860127/",
+    tiktok: "",
+    gmail:  ""
   },
   {
     name:  "Control",
     price: "₱55",
     stock: 2,
     desc:  "",
-    photo: "Control_Fruit.webp",              // paste a direct image URL here, or leave blank for default art
+    photo: "Control_Fruit.webp",
     sold:  false,
-    fb:     "https://www.facebook.com/people/Val-Medalla/61575121860127/",              // e.g. "https://facebook.com/yourname"
-    tiktok: "",              // e.g. "@yourname" or full link
-    gmail:  ""               // e.g. "yourname@gmail.com"
+    fb:     "https://www.facebook.com/people/Val-Medalla/61575121860127/",
+    tiktok: "",
+    gmail:  ""
   },
   {
     name:  "Tiger",
     price: "₱45",
     stock: 1,
     desc:  "",
-    photo: "Tiger_Fruit.webp",              // paste a direct image URL here, or leave blank for default art
+    photo: "Tiger_Fruit.webp",
     sold:  false,
-    fb:     "https://www.facebook.com/people/Val-Medalla/61575121860127/",              // e.g. "https://facebook.com/yourname"
-    tiktok: "",              // e.g. "@yourname" or full link
-    gmail:  ""               // e.g. "yourname@gmail.com"
+    fb:     "https://www.facebook.com/people/Val-Medalla/61575121860127/",
+    tiktok: "",
+    gmail:  ""
   },
   {
     name:  "Yeti",
     price: "₱45",
     stock: 1,
     desc:  "",
-    photo: "Yeti_Fruit.webp",              // paste a direct image URL here, or leave blank for default art
+    photo: "Yeti_Fruit.webp",
     sold:  false,
-    fb:     "https://www.facebook.com/people/Val-Medalla/61575121860127/",              // e.g. "https://facebook.com/yourname"
-    tiktok: "",              // e.g. "@yourname" or full link
-    gmail:  ""               // e.g. "yourname@gmail.com"
+    fb:     "https://www.facebook.com/people/Val-Medalla/61575121860127/",
+    tiktok: "",
+    gmail:  ""
   },
   {
     name:  "Lightning",
     price: "₱35",
     stock: 0,
     desc:  "",
-    photo: "Lightning_Fruit.webp",              // paste a direct image URL here, or leave blank for default art
+    photo: "Lightning_Fruit.webp",
     sold:  true,
-    fb:     "https://www.facebook.com/people/Val-Medalla/61575121860127/",              // e.g. "https://facebook.com/yourname"
-    tiktok: "",              // e.g. "@yourname" or full link
-    gmail:  ""               // e.g. "yourname@gmail.com"
+    fb:     "https://www.facebook.com/people/Val-Medalla/61575121860127/",
+    tiktok: "",
+    gmail:  ""
   },
   {
     name:  "Gas",
     price: "₱35",
     stock: 1,
     desc:  "",
-    photo: "Gas_Fruit.webp",              // paste a direct image URL here, or leave blank for default art
+    photo: "Gas_Fruit.webp",
     sold:  false,
-    fb:     "https://www.facebook.com/people/Val-Medalla/61575121860127/",              // e.g. "https://facebook.com/yourname"
-    tiktok: "",              // e.g. "@yourname" or full link
-    gmail:  ""               // e.g. "yourname@gmail.com"
+    fb:     "https://www.facebook.com/people/Val-Medalla/61575121860127/",
+    tiktok: "",
+    gmail:  ""
   },
- {
+  {
     name:  "Dough",
     price: "₱25",
     stock: 2,
     desc:  "",
-    photo: "Dough_Fruit.webp",              // paste a direct image URL here, or leave blank for default art
+    photo: "Dough_Fruit.webp",
     sold:  false,
-    fb:     "https://www.facebook.com/people/Val-Medalla/61575121860127/",              // e.g. "https://facebook.com/yourname"
-    tiktok: "",              // e.g. "@yourname" or full link
-    gmail:  ""               // e.g. "yourname@gmail.com"
+    fb:     "https://www.facebook.com/people/Val-Medalla/61575121860127/",
+    tiktok: "",
+    gmail:  ""
   },
   {
     name:  "T-Rex",
     price: "₱20",
     stock: 0,
     desc:  "",
-    photo: "T-Rex_Fruit.webp",              // paste a direct image URL here, or leave blank for default art
+    photo: "T-Rex_Fruit.webp",
     sold:  false,
-    fb:     "https://www.facebook.com/people/Val-Medalla/61575121860127/",              // e.g. "https://facebook.com/yourname"
-    tiktok: "",              // e.g. "@yourname" or full link
-    gmail:  ""               // e.g. "yourname@gmail.com"
+    fb:     "https://www.facebook.com/people/Val-Medalla/61575121860127/",
+    tiktok: "",
+    gmail:  ""
   },
   {
     name:  "Venom",
     price: "₱20",
     stock: 2,
     desc:  "",
-    photo: "Venom_Fruit.webp",              // paste a direct image URL here, or leave blank for default art
+    photo: "Venom_Fruit.webp",
     sold:  false,
-    fb:     "https://www.facebook.com/people/Val-Medalla/61575121860127/",              // e.g. "https://facebook.com/yourname"
-    tiktok: "",              // e.g. "@yourname" or full link
-    gmail:  ""               // e.g. "yourname@gmail.com"
+    fb:     "https://www.facebook.com/people/Val-Medalla/61575121860127/",
+    tiktok: "",
+    gmail:  ""
   },
   {
     name:  "Spirit",
     price: "₱15",
     stock: 1,
     desc:  "",
-    photo: "Spirit_Fruit.webp",              // paste a direct image URL here, or leave blank for default art
+    photo: "Spirit_Fruit.webp",
     sold:  false,
-    fb:     "https://www.facebook.com/people/Val-Medalla/61575121860127/",              // e.g. "https://facebook.com/yourname"
-    tiktok: "",              // e.g. "@yourname" or full link
-    gmail:  ""               // e.g. "yourname@gmail.com"
+    fb:     "https://www.facebook.com/people/Val-Medalla/61575121860127/",
+    tiktok: "",
+    gmail:  ""
   },
   {
     name:  "Buddha",
     price: "₱15",
     stock: 0,
     desc:  "",
-    photo: "Buddha_Fruit.webp",              // paste a direct image URL here, or leave blank for default art
+    photo: "Buddha_Fruit.webp",
     sold:  true,
-    fb:     "https://www.facebook.com/people/Val-Medalla/61575121860127/",              // e.g. "https://facebook.com/yourname"
-    tiktok: "",              // e.g. "@yourname" or full link
-    gmail:  ""               // e.g. "yourname@gmail.com"
+    fb:     "https://www.facebook.com/people/Val-Medalla/61575121860127/",
+    tiktok: "",
+    gmail:  ""
   },
   {
     name:  "Gravity",
     price: "₱15",
     stock: 1,
     desc:  "",
-    photo: "Gravity_Fruit.webp",              // paste a direct image URL here, or leave blank for default art
+    photo: "Gravity_Fruit.webp",
     sold:  false,
-    fb:     "https://www.facebook.com/people/Val-Medalla/61575121860127/",              // e.g. "https://facebook.com/yourname"
-    tiktok: "",              // e.g. "@yourname" or full link
-    gmail:  ""               // e.g. "yourname@gmail.com"
+    fb:     "https://www.facebook.com/people/Val-Medalla/61575121860127/",
+    tiktok: "",
+    gmail:  ""
   },
   {
     name:  "Mammoth",
     price: "₱15",
     stock: 1,
     desc:  "",
-    photo: "Mammoth_Fruit.webp",              // paste a direct image URL here, or leave blank for default art
+    photo: "Mammoth_Fruit.webp",
     sold:  false,
-    fb:     "https://www.facebook.com/people/Val-Medalla/61575121860127/",              // e.g. "https://facebook.com/yourname"
-    tiktok: "",              // e.g. "@yourname" or full link
-    gmail:  ""               // e.g. "yourname@gmail.com"
+    fb:     "https://www.facebook.com/people/Val-Medalla/61575121860127/",
+    tiktok: "",
+    gmail:  ""
   },
   {
     name:  "Portal",
     price: "₱15",
     stock: 1,
     desc:  "",
-    photo: "Portal_Fruit.webp",              // paste a direct image URL here, or leave blank for default art
+    photo: "Portal_Fruit.webp",
     sold:  false,
-    fb:     "https://www.facebook.com/people/Val-Medalla/61575121860127/",              // e.g. "https://facebook.com/yourname"
-    tiktok: "",              // e.g. "@yourname" or full link
-    gmail:  ""               // e.g. "yourname@gmail.com"
+    fb:     "https://www.facebook.com/people/Val-Medalla/61575121860127/",
+    tiktok: "",
+    gmail:  ""
   },
   {
     name:  "Shadow",
     price: "₱10",
     stock: 3,
     desc:  "",
-    photo: "Shadow_Fruit.webp",              // paste a direct image URL here, or leave blank for default art
+    photo: "Shadow_Fruit.webp",
     sold:  false,
-    fb:     "https://www.facebook.com/people/Val-Medalla/61575121860127/",              // e.g. "https://facebook.com/yourname"
-    tiktok: "",              // e.g. "@yourname" or full link
-    gmail:  ""               // e.g. "yourname@gmail.com"
-  },
-  
+    fb:     "https://www.facebook.com/people/Val-Medalla/61575121860127/",
+    tiktok: "",
+    gmail:  ""
+  }
   // , { name: "Another Fruit", price: "300 Robux", stock: 2, desc: "...", photo: "", sold: false, fb:"", tiktok:"", gmail:"" }
 ];
 /* ============================================================ */
@@ -353,14 +377,40 @@ var FRUIT_LISTINGS = [
   }
 
   var grid = document.getElementById('grid');
+  var searchInput = document.getElementById('searchInput');
+  var searchCount = document.getElementById('searchCount');
+  var currentIndices = []; // maps rendered card position -> index in FRUIT_LISTINGS
+
+  function getFilteredIndices(){
+    var q = searchInput.value.trim().toLowerCase();
+    var result = [];
+    FRUIT_LISTINGS.forEach(function(f, idx){
+      if(!q || (f.name || '').toLowerCase().indexOf(q) !== -1){
+        result.push(idx);
+      }
+    });
+    return result;
+  }
 
   function renderGrid(){
     grid.innerHTML = '';
+    currentIndices = getFilteredIndices();
+    var q = searchInput.value.trim();
+
     if(!FRUIT_LISTINGS.length){
       grid.innerHTML = '<div class="empty">No fruits listed yet.</div>';
+      searchCount.textContent = '';
       return;
     }
-    FRUIT_LISTINGS.forEach(function(f, idx){
+    if(!currentIndices.length){
+      grid.innerHTML = '<div class="empty">No fruits match "'+escapeHtml(q)+'".</div>';
+      searchCount.textContent = '';
+      return;
+    }
+    searchCount.textContent = q ? (currentIndices.length + ' result' + (currentIndices.length===1?'':'s')) : '';
+
+    currentIndices.forEach(function(idx){
+      var f = FRUIT_LISTINGS[idx];
       var sold = isSoldOut(f);
       var card = document.createElement('div');
       card.className = 'card';
@@ -375,6 +425,8 @@ var FRUIT_LISTINGS = [
       grid.appendChild(card);
     });
   }
+
+  searchInput.addEventListener('input', renderGrid);
 
   var detailOverlay = document.getElementById('detailOverlay');
   var detailModal = document.getElementById('detailModal');
